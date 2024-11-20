@@ -1,0 +1,19 @@
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# تحميل البيانات التاريخية
+data = pd.read_csv('historical_data.csv')
+prices = data['close'].values
+timestamps = np.arange(len(prices)).reshape(-1, 1)
+
+# تدريب نموذج الانحدار الخطي
+model = LinearRegression().fit(timestamps, prices)
+
+# توقع السعر المستقبلي
+future_timestamps = np.arange(len(prices), len(prices) + 10).reshape(-1, 1)
+predicted_prices = model.predict(future_timestamps)
+
+# تصدير التوقعات إلى CSV
+predictions = pd.DataFrame({'timestamp': future_timestamps.flatten(), 'predicted_price': predicted_prices})
+predictions.to_csv('predicted_prices.csv', index=False)
